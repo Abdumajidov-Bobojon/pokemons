@@ -23,7 +23,6 @@ const Theme = ({ children }: ThemeProps) => {
             fairy: "#EBAFAE",
             fighting: "#6F874C",
             ground: "#B37658"
-
         }
     };
 

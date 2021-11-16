@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import PokemonCard from "../components/PokemonCard";
 import api from "../utils/axios";
-import Select from "react-select"
+import Select, { SingleValue } from "react-select"
 
 interface PokemonData {
     name: string;
@@ -11,8 +11,27 @@ interface PokemonData {
     types: string[]
 }
 
+const PokemonTypes = [
+    "grass",
+    "poison",
+    "fire",
+    "water",
+    "bug",
+    "flying",
+    "electric",
+    "ghost",
+    "normal",
+    "psychic",
+    "steel",
+    "rock",
+    "fairy",
+    "fighting",
+    "ground"
+]
+
 const PokemonList: Function = () => {
     const [pokemons, setPokemons] = useState<PokemonData[] | null>(null)
+    const [filteredPokemons, setFilteredPokemons] = useState<PokemonData[] | null>(null)
 
     useEffect(() => {
         let promises = []
@@ -31,25 +50,28 @@ const PokemonList: Function = () => {
         })
     }, [])
 
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-    ]
+    const filterByName = (val: SingleValue<{ value: string; label: string; }>) => {
+        if (val === null) {
+            setFilteredPokemons(null)
+        } else {
+            setFilteredPokemons(pokemons!.filter(e => e.name === val?.label.toLowerCase()))
+        }
+    }
 
     return (
         <Wrapper>
             <Filters>
                 <Select
                     options={pokemons?.map(e => ({ value: e.id, label: e.name }))}
-                    onChange={(val) => console.log(val)}
+                    onChange={(val) => filterByName(val)}
                     placeholder="Find by name"
                     className="select"
                     isClearable
+
                 />
 
                 <Select
-                    options={options}
+                    options={PokemonTypes.map(e => ({ value: e, label: e }))}
                     onChange={(val) => console.log(val)}
                     placeholder="Filter by type"
                     isMulti
@@ -59,7 +81,15 @@ const PokemonList: Function = () => {
 
             <PokemonsWrapper>
                 {
-                    pokemons?.map((element, index) =>
+                    filteredPokemons ? filteredPokemons?.map((element, index) =>
+                        <PokemonCard
+                            key={index}
+                            image={element.image}
+                            name={element.name}
+                            types={element.types}
+                            id={element.id}
+                        />
+                    ) : pokemons?.map((element, index) =>
                         <PokemonCard
                             key={index}
                             image={element.image}
@@ -77,6 +107,7 @@ const PokemonList: Function = () => {
 export default PokemonList;
 
 const Wrapper = styled.div`
+    min-height: 100vh;
     padding: 20px 100px;
     box-sizing: border-box;
     background: radial-gradient(121.73% 181.92% at 6.77% 4.33%, #4F5275 0%, #33304B 100%);
@@ -96,7 +127,7 @@ const Wrapper = styled.div`
 
 const PokemonsWrapper = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 0.5fr));
     place-items: center;
     gap: 40px 30px;
 `;
@@ -108,7 +139,6 @@ const Filters = styled.div`
     margin: 20px 0;
 
     .select {
-        z-index: 200;
         font-size: 14px;
     }
 `;

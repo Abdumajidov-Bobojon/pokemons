@@ -9,29 +9,37 @@ interface ComponentProps {
 
 export default function PokemonCard({ name, image, id, types }: ComponentProps) {
     return (
-        <Wrapper types={types}>
-            <ImageWrapper>
-                <img src={image} alt={name + "-image"} />
-            </ImageWrapper>
-            <Number>#{id}</Number>
-            <Info type={types[0]}>
-                <p className="name">{name}</p>
+        <Border types={types}>
+            <Wrapper>
+                <ImageWrapper>
+                    <img src={image} alt={name + "-image"} />
+                </ImageWrapper>
+                <Number>#{id}</Number>
+                <Info type={types[0]}>
+                    <p className="name">{name}</p>
 
-                <div className="types">
-                    {
-                        types.map((element, index) =>
-                            <Type key={index} type={element}>
-                                {element}
-                            </Type>
-                        )
-                    }
-                </div>
-            </Info>
-        </Wrapper>
+                    <div className="types">
+                        {
+                            types.map((element, index) =>
+                                <Type key={index} type={element}>
+                                    {element}
+                                </Type>
+                            )
+                        }
+                    </div>
+                </Info>
+            </Wrapper>
+        </Border>
     )
 }
 
-const Wrapper = styled.div<{ types: string[] }>`
+const Wrapper = styled.div`
+    background: radial-gradient(121.73% 181.92% at 6.77% 4.33%, #4F5275 0%, #33304B 100%);
+    border-radius: 15px;
+    overflow: hidden;
+`;
+
+const Border = styled.div<{ types: string[] }>`
     width: 100%;
     height: 100%;
     box-sizing: border-box;
@@ -40,26 +48,29 @@ const Wrapper = styled.div<{ types: string[] }>`
     position: relative;
     cursor: pointer;
     transition: .3s;
-    background: radial-gradient(121.73% 181.92% at 6.77% 4.33%, #4F5275 0%, #33304B 100%);
-    
+    padding: 2px;
+
     ${({ types, theme }) => {
         if (types.length > 1) {
             return css`
-                border-top: 1px solid ${theme.colors[types[0]]};
-                border-left: 1px solid ${theme.colors[types[0]]};
-
-                border-right: 1px solid ${theme.colors[types[1]]};
-                border-bottom: 1px solid ${theme.colors[types[1]]};  
+                background: linear-gradient(135deg, 
+                    ${theme.colors[types[0]]} 0%, 
+                    ${theme.colors[types[1]]} 100%
+                ); 
             `
         } else {
             return css`
-                border: 1px solid ${theme.colors[types[0]]};  
+                background: ${theme.colors[types[0]]};  
             `
         }
     }}
 
     :hover {
         transform: translateY(-15px);
+        background: linear-gradient(135deg, 
+                    ${({ types, theme }) => theme.colors[types[1]]} 0%, 
+                    ${({ types, theme }) => theme.colors[types[0]]} 100%
+        );
     }
 `;
 
@@ -72,14 +83,13 @@ const ImageWrapper = styled.div`
         width: 100%;
         height: 100%;
         object-fit: cover;
-        z-index: 100;
         position: relative;
     }   
 `;
 
 const Info = styled.div<{ type: string }>`
-background: radial-gradient(133.41% 135.91% at 85.45% 113.45%, #383652 0%, #2A2A3D 100%);
-padding: 10px 0;
+    background: radial-gradient(133.41% 135.91% at 85.45% 113.45%, #383652 0%, #2A2A3D 100%);
+    padding: 10px 0;
 
     .name {
         text-transform: capitalize;
@@ -113,7 +123,7 @@ const Type = styled.div<{ type: string }>`
 
 const Number = styled.div`
     position: absolute;
-    right: 5px;
+    right: 15px;
     top: 5px;
     font-size: 32px;
     font-weight: 700;
