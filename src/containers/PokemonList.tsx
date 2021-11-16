@@ -41,9 +41,11 @@ const PokemonList: Function = () => {
         <Wrapper>
             <Filters>
                 <Select
-                    options={options}
+                    options={pokemons?.map(e => ({ value: e.id, label: e.name }))}
                     onChange={(val) => console.log(val)}
                     placeholder="Find by name"
+                    className="select"
+                    isClearable
                 />
 
                 <Select
@@ -51,6 +53,7 @@ const PokemonList: Function = () => {
                     onChange={(val) => console.log(val)}
                     placeholder="Filter by type"
                     isMulti
+                    className="select"
                 />
             </Filters>
 
@@ -76,18 +79,36 @@ export default PokemonList;
 const Wrapper = styled.div`
     padding: 20px 100px;
     box-sizing: border-box;
+    background: radial-gradient(121.73% 181.92% at 6.77% 4.33%, #4F5275 0%, #33304B 100%);
+
+    @media(max-width: 1000px) {
+        padding: 20px 60px;
+    }
+
+    @media(max-width: 850px) {
+        padding: 20px 30px;
+    }
+
+    @media(max-width: 500px) {
+        padding: 20px;
+    }
 `;
 
 const PokemonsWrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     place-items: center;
-    gap: 20px;
+    gap: 40px 30px;
 `;
 
 const Filters = styled.div`
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     margin: 20px 0;
+
+    .select {
+        z-index: 200;
+        font-size: 14px;
+    }
 `;

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import { BrowserRouter } from "react-router-dom"
 import Theme from './theme';
+import "./index.css"
 
 ReactDOM.render(
   <React.StrictMode>

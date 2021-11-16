@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 interface ComponentProps {
     image: string,
@@ -9,7 +9,7 @@ interface ComponentProps {
 
 export default function PokemonCard({ name, image, id, types }: ComponentProps) {
     return (
-        <Wrapper type={types[0]}>
+        <Wrapper types={types}>
             <ImageWrapper>
                 <img src={image} alt={name + "-image"} />
             </ImageWrapper>
@@ -31,17 +31,36 @@ export default function PokemonCard({ name, image, id, types }: ComponentProps) 
     )
 }
 
-
-const Wrapper = styled.div<{ type: string }>`
+const Wrapper = styled.div<{ types: string[] }>`
     width: 100%;
     height: 100%;
-    font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
     border-radius: 15px;
     overflow: hidden;
     position: relative;
+    cursor: pointer;
+    transition: .3s;
+    background: radial-gradient(121.73% 181.92% at 6.77% 4.33%, #4F5275 0%, #33304B 100%);
+    
+    ${({ types, theme }) => {
+        if (types.length > 1) {
+            return css`
+                border-top: 1px solid ${theme.colors[types[0]]};
+                border-left: 1px solid ${theme.colors[types[0]]};
 
-    border: 1px solid ${({ type, theme }) => theme.colors[type]};
+                border-right: 1px solid ${theme.colors[types[1]]};
+                border-bottom: 1px solid ${theme.colors[types[1]]};  
+            `
+        } else {
+            return css`
+                border: 1px solid ${theme.colors[types[0]]};  
+            `
+        }
+    }}
+
+    :hover {
+        transform: translateY(-15px);
+    }
 `;
 
 const ImageWrapper = styled.div`
@@ -55,12 +74,12 @@ const ImageWrapper = styled.div`
         object-fit: cover;
         z-index: 100;
         position: relative;
-    }
+    }   
 `;
 
 const Info = styled.div<{ type: string }>`
-    background-color: ${({ type, theme }) => theme.colors[type]};
-    padding: 10px 0;
+background: radial-gradient(133.41% 135.91% at 85.45% 113.45%, #383652 0%, #2A2A3D 100%);
+padding: 10px 0;
 
     .name {
         text-transform: capitalize;
@@ -69,27 +88,27 @@ const Info = styled.div<{ type: string }>`
         margin: 0;
         text-align: center;
         margin-bottom: 10px;
-    }
+    }   
 
     .types {
         display: flex;
-        gap: 20px;
+        gap: 10px;
         justify-content: center;
 
-        p {
-            margin: 0;
-        }
-    }    
+            p {
+                margin: 0;
+            }
+    }
 `;
 
 const Type = styled.div<{ type: string }>`
     font-size: 12px;
-    box-shadow: inset 0px -2px 0px rgba(0, 0, 0, 0.18);
-    border-radius: 11px;
-    background-color: white;
+    border-radius: 4px;
     min-width: 70px;
     padding: 2px 5px;
     text-align: center;
+    background-color: ${({ type, theme }) => theme.colors[type]};
+    color: white;
 `
 
 const Number = styled.div`
@@ -97,5 +116,6 @@ const Number = styled.div`
     right: 5px;
     top: 5px;
     font-size: 32px;
+    font-weight: 700;
     color: rgba(0, 0, 0, 0.3)
 `;
