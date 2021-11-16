@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import PokemonCard from "../components/PokemonCard";
 import api from "../utils/axios";
-import Select, { SingleValue } from "react-select"
+import Select, { MultiValue, SingleValue } from "react-select"
+import { pokemonTypes } from "../utils/pokemonTypes";
 
 interface PokemonData {
     name: string;
@@ -10,24 +11,6 @@ interface PokemonData {
     image: string,
     types: string[]
 }
-
-const PokemonTypes = [
-    "grass",
-    "poison",
-    "fire",
-    "water",
-    "bug",
-    "flying",
-    "electric",
-    "ghost",
-    "normal",
-    "psychic",
-    "steel",
-    "rock",
-    "fairy",
-    "fighting",
-    "ground"
-]
 
 const PokemonList: Function = () => {
     const [pokemons, setPokemons] = useState<PokemonData[] | null>(null)
@@ -58,6 +41,33 @@ const PokemonList: Function = () => {
         }
     }
 
+    const filterByType = (val: MultiValue<{ value: string; label: string; }>) => {
+        if (val.length === 0) {
+            setFilteredPokemons(null)
+        } else {
+            const filter = val.map(e => e.value)
+
+            setFilteredPokemons(pokemons!.filter(e => {
+                const filtered = filter.map(filterElement => e.types.includes(filterElement))
+                return filtered.includes(true) ? true : false
+            }))
+        }
+    }
+
+
+    const template = (state: PokemonData[]) => {
+        return state?.map((element, index) =>
+
+            <PokemonCard
+                key={index}
+                image={element.image}
+                name={element.name}
+                types={element.types}
+                id={element.id}
+            />
+        )
+    }
+
     return (
         <Wrapper>
             <Filters>
@@ -71,8 +81,8 @@ const PokemonList: Function = () => {
                 />
 
                 <Select
-                    options={PokemonTypes.map(e => ({ value: e, label: e }))}
-                    onChange={(val) => console.log(val)}
+                    options={pokemonTypes.map(e => ({ value: e, label: e }))}
+                    onChange={(val) => filterByType(val)}
                     placeholder="Filter by type"
                     isMulti
                     className="select"
@@ -81,23 +91,7 @@ const PokemonList: Function = () => {
 
             <PokemonsWrapper>
                 {
-                    filteredPokemons ? filteredPokemons?.map((element, index) =>
-                        <PokemonCard
-                            key={index}
-                            image={element.image}
-                            name={element.name}
-                            types={element.types}
-                            id={element.id}
-                        />
-                    ) : pokemons?.map((element, index) =>
-                        <PokemonCard
-                            key={index}
-                            image={element.image}
-                            name={element.name}
-                            types={element.types}
-                            id={element.id}
-                        />
-                    )
+                    filteredPokemons ? template(filteredPokemons) : template(pokemons!)
                 }
             </PokemonsWrapper>
         </Wrapper>
