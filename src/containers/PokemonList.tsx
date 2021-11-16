@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import PokemonCard from "../components/PokemonCard";
 import api from "../utils/axios";
+import Select from "react-select"
 
 interface PokemonData {
     name: string;
@@ -24,24 +25,48 @@ const PokemonList: Function = () => {
             setPokemons(res.map(e => ({
                 name: e.name,
                 id: e.id,
-                image: e.sprites['front_default'],
+                image: e.sprites['front_shiny'],
                 types: e.types.map((type: any) => type.type.name)
             })));
         })
     }, [])
 
+    const options = [
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' }
+    ]
+
     return (
         <Wrapper>
-            {
-                pokemons?.map((element, index) =>
-                    <PokemonCard
-                        key={index}
-                        image={element.image}
-                        name={element.name}
-                        types={element.types}
-                    />
-                )
-            }
+            <Filters>
+                <Select
+                    options={options}
+                    onChange={(val) => console.log(val)}
+                    placeholder="Find by name"
+                />
+
+                <Select
+                    options={options}
+                    onChange={(val) => console.log(val)}
+                    placeholder="Filter by type"
+                    isMulti
+                />
+            </Filters>
+
+            <PokemonsWrapper>
+                {
+                    pokemons?.map((element, index) =>
+                        <PokemonCard
+                            key={index}
+                            image={element.image}
+                            name={element.name}
+                            types={element.types}
+                            id={element.id}
+                        />
+                    )
+                }
+            </PokemonsWrapper>
         </Wrapper>
     )
 }
@@ -49,7 +74,20 @@ const PokemonList: Function = () => {
 export default PokemonList;
 
 const Wrapper = styled.div`
+    padding: 20px 100px;
+    box-sizing: border-box;
+`;
+
+const PokemonsWrapper = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     place-items: center;
+    gap: 20px;
+`;
+
+const Filters = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 20px 0;
 `;
