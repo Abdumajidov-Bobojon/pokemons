@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import PokemonCard from "../components/PokemonCard";
 import api from "../utils/axios";
 
 interface PokemonData {
     name: string;
     id: string,
     image: string,
-    type: string
+    types: string[]
 }
 
 const PokemonList: Function = () => {
@@ -24,16 +25,23 @@ const PokemonList: Function = () => {
                 name: e.name,
                 id: e.id,
                 image: e.sprites['front_default'],
-                type: e.types.map((type: any) => type.type.name).join(", ")
+                types: e.types.map((type: any) => type.type.name)
             })));
         })
     }, [])
 
-    console.log(pokemons)
-
     return (
         <Wrapper>
-
+            {
+                pokemons?.map((element, index) =>
+                    <PokemonCard
+                        key={index}
+                        image={element.image}
+                        name={element.name}
+                        types={element.types}
+                    />
+                )
+            }
         </Wrapper>
     )
 }
@@ -41,5 +49,7 @@ const PokemonList: Function = () => {
 export default PokemonList;
 
 const Wrapper = styled.div`
-
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    place-items: center;
 `;
