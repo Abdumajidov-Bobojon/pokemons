@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components"
+import { Link } from "react-router-dom"
 
 interface ComponentProps {
     image: string,
@@ -10,25 +11,27 @@ interface ComponentProps {
 export default function PokemonCard({ name, image, id, types }: ComponentProps) {
     return (
         <Border types={types}>
-            <Wrapper>
-                <ImageWrapper>
-                    <img src={image} alt={name + "-image"} />
-                </ImageWrapper>
-                <Number>#{id}</Number>
-                <Info type={types[0]}>
-                    <p className="name">{name}</p>
+            <Link to={`/${id}`}>
+                <Wrapper>
+                    <ImageWrapper>
+                        <img src={image} alt={name + "-image"} />
+                    </ImageWrapper>
+                    <Number>#{id}</Number>
+                    <Info type={types[0]}>
+                        <p className="name">{name}</p>
 
-                    <div className="types">
-                        {
-                            types.map((element, index) =>
-                                <Type key={index} type={element}>
-                                    {element}
-                                </Type>
-                            )
-                        }
-                    </div>
-                </Info>
-            </Wrapper>
+                        <div className="types">
+                            {
+                                types.map((element, index) =>
+                                    <Type key={index} type={element}>
+                                        {element}
+                                    </Type>
+                                )
+                            }
+                        </div>
+                    </Info>
+                </Wrapper>
+            </Link>
         </Border>
     )
 }
@@ -111,7 +114,7 @@ const Info = styled.div<{ type: string }>`
     }
 `;
 
-const Type = styled.div<{ type: string }>`
+export const Type = styled.div<{ type: string }>`
     font-size: 12px;
     border-radius: 4px;
     min-width: 70px;

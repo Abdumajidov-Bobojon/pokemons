@@ -69,7 +69,7 @@ const PokemonList: Function = () => {
     }
 
     return (
-        <Wrapper>
+        <ListWrapper>
             <Filters>
                 <Select
                     options={pokemons?.map(e => ({ value: e.id, label: e.name }))}
@@ -94,13 +94,13 @@ const PokemonList: Function = () => {
                     filteredPokemons ? template(filteredPokemons) : template(pokemons!)
                 }
             </PokemonsWrapper>
-        </Wrapper>
+        </ListWrapper>
     )
 }
 
 export default PokemonList;
 
-const Wrapper = styled.div`
+export const ListWrapper = styled.div`
     min-height: 100vh;
     padding: 20px 100px;
     box-sizing: border-box;
