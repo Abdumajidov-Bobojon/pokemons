@@ -7,6 +7,10 @@ import { ReactComponent as ArrowLeft } from "../assets/arrow-left.svg"
 import { ReactComponent as Pokeball } from "../assets/pokeball.svg"
 import { Type } from "../components/PokemonCard";
 
+import { ReactComponent as HeightIcon } from "../assets/height.svg"
+import { ReactComponent as WeightIcon } from "../assets/weight.svg"
+import Stat from "../components/Stat";
+
 interface PokemonDetailInterface {
     name: string,
     id: string,
@@ -24,15 +28,15 @@ const PokemonDetail = () => {
 
     useEffect(() => {
         api.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
-            .then(res => {
+            .then(({ data }) => {
                 setPokemon({
-                    name: res.data.name,
-                    id: res.data.id,
-                    image: res.data.sprites['front_shiny'],
-                    types: res.data.types.map((type: any) => type.type.name),
-                    weight: res.data.weight,
-                    height: res.data.height,
-                    stats: res.data.stats.map((e: any) => ({
+                    name: data.name,
+                    id: data.id,
+                    image: data.sprites['front_shiny'],
+                    types: data.types.map((type: any) => type.type.name),
+                    weight: data.weight,
+                    height: data.height,
+                    stats: data.stats.map((e: any) => ({
                         name: e.stat.name,
                         stat: e.base_stat
                     }))
@@ -61,23 +65,59 @@ const PokemonDetail = () => {
                             pokemon.types?.map(e => <Type type={e}>{e}</Type>)
                         }
                     </Types>
+
+                    <Title types={pokemon.types}>About</Title>
+                    <AdditionalInfo>
+
+                        <InfoCharacter>
+                            <WeightIcon />
+                            <p>Weight</p>
+                            {pokemon.weight} kg
+                        </InfoCharacter>
+
+                        <InfoCharacter>
+                            <HeightIcon />
+                            <p>Height</p>
+                            {pokemon.height} m
+                        </InfoCharacter>
+                    </AdditionalInfo>
+
+                    <Title types={pokemon.types}>Base Stats</Title>
+
+                    <Stats>
+                        <Stat />
+                        <Stat />
+                        <Stat />
+                        <Stat />
+                        <Stat />
+                        <Stat />
+                    </Stats>
                 </Info>
             </Detail>
-        </DetailWrapper >
+        </DetailWrapper>
     )
 }
 
 export default PokemonDetail
 
-const DetailWrapper = styled(ListWrapper)`
-    
-`;
+const DetailWrapper = styled(ListWrapper)``;
 
 const Detail = styled.div <{ types: string[] }>`
 
-    ${({ types, theme }) => types && css`
-        background-color: ${theme.colors[types[0]]};
-    `}
+    ${({ types, theme }) => {
+        if (types && types.length > 1) {
+            return css`
+                background: linear-gradient(135deg, 
+                    ${theme.colors[types[0]]} 0%, 
+                    ${theme.colors[types[1]]} 100%
+                ); 
+            `
+        } else if (types) {
+            return css`
+                background: ${theme.colors[types[0]]};  
+            `
+        }
+    }}
 
     width: 500px;
     margin: auto;
@@ -88,6 +128,20 @@ const Detail = styled.div <{ types: string[] }>`
     .pokeball {
         position: absolute;
         right: 20px;
+        animation-name: rotate;
+        animation-timing-function: linear;
+        animation-duration: 20s;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg)
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
     }
 `;
 
@@ -96,16 +150,18 @@ const PokemonImage = styled.img`
     height: 200px;
     position: absolute;
     left: 50%;
-    top: 100px;
+    top: 70px;
     transform: translateX(-50%);
 `;
 
 const Info = styled.div`
     width: 100%;
-    height: 300px;
+    min-height: 300px;
     background-color: white;
-    margin-top: 130px;
-    border-radius: 10px;
+    margin-top: 100px;
+    border-radius: 5px;
+    padding-bottom: 24px;
+
 `;
 
 const Header = styled.div`
@@ -138,3 +194,41 @@ const Types = styled.div`
     justify-content: center;
     gap: 20px;
 `
+
+const AdditionalInfo = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+`;
+
+const InfoCharacter = styled.div`
+    padding: 0 10px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    color: #212121;
+    font-size: 14px;
+
+    svg {
+        height: 16px;
+    }
+    
+    p {
+        font-size: 10px;
+        color: #666666;
+    }
+`;
+
+const Title = styled.h1<{ types: string[] }>`
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    margin: 16px 0;
+
+    color: ${({ types, theme }) => types && theme.colors[types[0]]}
+`;
+
+const Stats = styled.div`
+    
+`;
