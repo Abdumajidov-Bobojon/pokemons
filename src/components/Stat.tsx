@@ -1,11 +1,17 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
-const Stat = () => {
+interface Props {
+    name: string,
+    stat: number,
+    types: string[]
+}
+
+const Stat = ({ name, stat, types }: Props) => {
     return (
-        <Wrapper>
-            <div className="name">HP</div>
+        <Wrapper stat={stat} types={types}>
+            <div className="name">{name}</div>
             <span></span>
-            <div className="percent">035</div>
+            <div className="stat">{stat}</div>
 
             <div className="bar">
                 <div className="fill"></div>
@@ -16,7 +22,7 @@ const Stat = () => {
 
 export default Stat
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ stat: number, types: string[] }>`
     height: 25px;
     width: 100%;
     display: flex;
@@ -25,12 +31,17 @@ const Wrapper = styled.div`
     padding: 0 20px;
 
     .name {
-        font-size: 14px;
+        font-size: 12px;
         line-height: 16px;
-        color: #F9CF30;
+        color: ${({ types, theme }) => theme.colors[types[0]]};
         font-weight: bold;
-        width: 45px;
+        min-width: 130px;
         text-align: right;
+    }
+
+    .stat {
+        min-width: 30px;
+        text-align: center;
     }
 
     span {
@@ -41,16 +52,51 @@ const Wrapper = styled.div`
     }
 
     .bar {
-        background: #F9CF3033;
+        ${({ types, theme }) => {
+        if (types && types.length > 1) {
+            return css`
+                                background: linear-gradient(135deg, 
+                                    ${theme.colors[types[0]] + "33"} 0%, 
+                                    ${theme.colors[types[1]] + "33"} 100%
+                                ); 
+                            `
+        } else if (types) {
+            return css`
+                                background: ${theme.colors[types[0]]};  
+                            `
+        }
+    }}
         height: 5px;
         width: 100%;
         border-radius: 4px;
-        overflow: hidden;
 
         .fill {
             height: 5px;
-            width: 50%;
-            background-color: #F9CF30;
+            max-width: ${({ stat }) => stat + "%"};
+            border-radius: 4px;
+            animation: grow 1s cubic-bezier(0.95, 0.05, 0.795, 0.035);
+
+            @keyframes grow {
+                from {
+                    max-width: 0px;
+                }
+            }
+
+
+        ${({ types, theme }) => {
+        if (types && types.length > 1) {
+            return css`
+                                background: linear-gradient(135deg, 
+                                    ${theme.colors[types[0]]} 0%, 
+                                    ${theme.colors[types[1]]} 100%
+                                ); 
+                            `
+        } else if (types) {
+            return css`
+                                background: ${theme.colors[types[0]]};  
+                            `
+        }
+    }}        
         }
     }
 `;

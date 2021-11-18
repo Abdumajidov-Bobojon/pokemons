@@ -85,12 +85,11 @@ const PokemonDetail = () => {
                     <Title types={pokemon.types}>Base Stats</Title>
 
                     <Stats>
-                        <Stat />
-                        <Stat />
-                        <Stat />
-                        <Stat />
-                        <Stat />
-                        <Stat />
+                        {
+                            pokemon.stats?.map((e: any) =>
+                                <Stat key={e.name} name={e.name} stat={e.stat} types={pokemon.types} />
+                            )
+                        }
                     </Stats>
                 </Info>
             </Detail>
@@ -152,6 +151,20 @@ const PokemonImage = styled.img`
     left: 50%;
     top: 70px;
     transform: translateX(-50%);
+    animation-name: float;
+    animation-iteration-count: infinite;
+    animation-duration: 2s;
+    animation-direction: alternate;
+
+    @keyframes float {
+        from {
+            top: 70px;
+        }
+
+        to {
+            top: 60px;
+        }
+    }
 `;
 
 const Info = styled.div`
