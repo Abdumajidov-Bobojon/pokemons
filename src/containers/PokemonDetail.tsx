@@ -9,6 +9,7 @@ import { Type } from "../components/PokemonCard";
 
 import { ReactComponent as HeightIcon } from "../assets/height.svg"
 import { ReactComponent as WeightIcon } from "../assets/weight.svg"
+import { ReactComponent as SlideIcon } from "../assets/slide.svg"
 import Stat from "../components/Stat";
 
 interface PokemonDetailInterface {
@@ -44,12 +45,21 @@ const PokemonDetail = () => {
             })
     }, [id])
 
-    console.log(pokemon)
+    const slide = (dir: string) => {
+        if (dir === "left" && !(+id! - 1 <= 0)) {
+            navigate(`/${+id! - 1}`)
+            console.log(+id!)
+        } else if (dir === "right" && !(+id! + 1 >= 100)) {
+            navigate(`/${+id! + 1}`)
+        }
+    }
 
     return (
         <DetailWrapper>
             <Detail types={pokemon.types}>
                 <Pokeball className="pokeball" />
+                <LeftSlideIcon onClick={() => slide("left")} />
+                <RightSlideIcon onClick={() => slide("right")} />
 
                 <Header>
                     <ArrowLeft onClick={() => navigate("/")} />
@@ -118,7 +128,7 @@ const Detail = styled.div <{ types: string[] }>`
         }
     }}
 
-    width: 500px;
+    max-width: 500px;
     margin: auto;
     padding: 5px;
     border-radius: 10px;
@@ -142,6 +152,18 @@ const Detail = styled.div <{ types: string[] }>`
             transform: rotate(360deg);
         }
     }
+
+    @media(max-width: 620px) {
+        margin: 0 50px;
+    }
+
+    @media(max-width: 500px) {
+        margin: 0 30px;
+    }
+
+    @media(max-width: 450px) {
+        margin: 0 20px;
+    }
 `;
 
 const PokemonImage = styled.img`
@@ -153,7 +175,7 @@ const PokemonImage = styled.img`
     transform: translateX(-50%);
     animation-name: float;
     animation-iteration-count: infinite;
-    animation-duration: 2s;
+    animation-duration: 1.5s;
     animation-direction: alternate;
 
     @keyframes float {
@@ -245,3 +267,30 @@ const Title = styled.h1<{ types: string[] }>`
 const Stats = styled.div`
     
 `;
+
+const LeftSlideIcon = styled(SlideIcon)`
+    position: absolute;
+    top: 50%;
+    left: -50px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+
+    @media(max-width: 450px) {
+        width: 20px;
+        height: 20px;
+        left: -25px;
+    }
+`
+
+const RightSlideIcon = styled(LeftSlideIcon)`
+    transform: rotate(180deg);
+    left: auto;
+    right: -50px;
+
+    @media(max-width: 450px) {
+        width: 20px;
+        height: 20px;
+        right: -25px;
+    }
+`

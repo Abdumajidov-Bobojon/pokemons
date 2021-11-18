@@ -55,15 +55,12 @@ const Wrapper = styled.div<{ stat: number, types: string[] }>`
         ${({ types, theme }) => {
         if (types && types.length > 1) {
             return css`
-                                background: linear-gradient(135deg, 
-                                    ${theme.colors[types[0]] + "33"} 0%, 
-                                    ${theme.colors[types[1]] + "33"} 100%
-                                ); 
-                            `
+                background: linear-gradient(135deg, ${theme.colors[types[0]] + "33"} 0%, ${theme.colors[types[1]] + "33"} 100%); 
+                `
         } else if (types) {
             return css`
-                                background: ${theme.colors[types[0]]};  
-                            `
+                background: ${theme.colors[types[0]] + "33"};  
+                `
         }
     }}
         height: 5px;
@@ -76,27 +73,24 @@ const Wrapper = styled.div<{ stat: number, types: string[] }>`
             border-radius: 4px;
             animation: grow 1s cubic-bezier(0.95, 0.05, 0.795, 0.035);
 
+
+        ${({ types, theme }) => {
+        if (types && types.length > 1) {
+            return css`
+                background: linear-gradient(135deg, ${theme.colors[types[0]]} 0%, ${theme.colors[types[1]]} 100%); 
+                `
+        } else if (types) {
+            return css`
+                background: ${theme.colors[types[0]]};  
+                `
+        }
+    }}       
+    
             @keyframes grow {
                 from {
                     max-width: 0px;
                 }
             }
-
-
-        ${({ types, theme }) => {
-        if (types && types.length > 1) {
-            return css`
-                                background: linear-gradient(135deg, 
-                                    ${theme.colors[types[0]]} 0%, 
-                                    ${theme.colors[types[1]]} 100%
-                                ); 
-                            `
-        } else if (types) {
-            return css`
-                                background: ${theme.colors[types[0]]};  
-                            `
-        }
-    }}        
         }
     }
 `;
