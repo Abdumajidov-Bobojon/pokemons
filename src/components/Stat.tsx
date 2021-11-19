@@ -14,7 +14,7 @@ const Stat = ({ name, stat, types }: Props) => {
             <div className="stat">{stat}</div>
 
             <div className="bar">
-                <div className="fill"></div>
+                <div className="fill" key={Math.random()}></div>
             </div>
         </Wrapper>
     )

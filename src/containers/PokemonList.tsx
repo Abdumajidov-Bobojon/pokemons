@@ -5,6 +5,7 @@ import api from "../utils/axios";
 import Select, { MultiValue, SingleValue } from "react-select"
 import { pokemonTypes } from "../utils/pokemonTypes";
 import { ReactComponent as Pokeball } from "../assets/pokeball.svg"
+import { Fade, Slide } from "react-awesome-reveal";
 
 interface PokemonData {
     name: string;
@@ -73,20 +74,20 @@ const PokemonList: Function = () => {
     }
 
     const pokemonListGenerator = () => {
-        let filteredData = pokemons && [...pokemons];
+        let stateCopy = pokemons && [...pokemons];
 
         if (filteredTypes) {
-            filteredData = pokemons && [...pokemons?.filter(e => {
+            stateCopy = pokemons && [...pokemons?.filter(e => {
                 const filtered = filteredTypes?.map(filterElement => e.types.includes(filterElement.value))
                 return filtered?.includes(true) ? true : false
             })]
         }
 
         if (filteredId) {
-            filteredData = filteredData && filteredData?.filter(e => e.id === filteredId.value)
+            stateCopy = stateCopy && stateCopy?.filter(e => e.id === filteredId.value)
         }
 
-        return filteredData;
+        return stateCopy;
     }
 
     return (
@@ -184,4 +185,8 @@ const StyledPokeball = styled(Pokeball)`
             transform: rotate(360deg);
         }
     }
+`
+
+const StyledFade = styled(Fade)`
+    width: 100%;
 `

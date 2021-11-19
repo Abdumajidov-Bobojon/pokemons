@@ -81,13 +81,13 @@ const PokemonDetail = () => {
 
                         <InfoCharacter>
                             <WeightIcon />
-                            <p>Weight</p>
+                            <p>Weight:</p>
                             {pokemon.weight} kg
                         </InfoCharacter>
 
                         <InfoCharacter>
                             <HeightIcon />
-                            <p>Height</p>
+                            <p>Height:</p>
                             {pokemon.height} m
                         </InfoCharacter>
                     </AdditionalInfo>

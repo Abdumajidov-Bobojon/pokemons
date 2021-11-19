@@ -10,7 +10,7 @@ interface ComponentProps {
 
 export default function PokemonCard({ name, image, id, types }: ComponentProps) {
     return (
-        <Border types={types}>
+        <Border types={types} index={id}>
             <Link to={`/${id}`}>
                 <Wrapper>
                     <ImageWrapper>
@@ -42,7 +42,7 @@ const Wrapper = styled.div`
     overflow: hidden;
 `;
 
-const Border = styled.div<{ types: string[] }>`
+const Border = styled.div<{ types: string[], index: string }>`
     width: 100%;
     height: 100%;
     box-sizing: border-box;
