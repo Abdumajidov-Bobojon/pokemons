@@ -129,6 +129,6 @@ const Number = styled.div`
     right: 15px;
     top: 5px;
     font-size: 32px;
-    font-weight: 700;
-    color: rgba(0, 0, 0, 0.3)
+    font-weight: 600;
+    color: #575b81
 `;

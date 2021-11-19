@@ -22,7 +22,8 @@ const Theme = ({ children }: ThemeProps) => {
             rock: "#B69E31",
             fairy: "#EBAFAE",
             fighting: "#6F874C",
-            ground: "#B37658"
+            ground: "#B37658",
+            ice: "#BDE7FF"
         }
     };
 

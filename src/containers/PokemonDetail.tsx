@@ -19,6 +19,7 @@ interface PokemonDetailInterface {
     types: string[],
     weight: string,
     height: string,
+    abilities: string[],
     stats: Array<{ id: number, stat: string }>
 }
 
@@ -37,6 +38,7 @@ const PokemonDetail = () => {
                     types: data.types.map((type: any) => type.type.name),
                     weight: data.weight,
                     height: data.height,
+                    abilities: data.abilities.map((e: any) => e.ability.name),
                     stats: data.stats.map((e: any) => ({
                         name: e.stat.name,
                         stat: e.base_stat
@@ -49,14 +51,16 @@ const PokemonDetail = () => {
         if (dir === "left" && !(+id! - 1 <= 0)) {
             navigate(`/${+id! - 1}`)
             console.log(+id!)
-        } else if (dir === "right" && !(+id! + 1 >= 100)) {
+        } else if (dir === "right" && !(+id! + 1 >= 101)) {
             navigate(`/${+id! + 1}`)
         }
     }
 
+    console.log(pokemon)
+
     return (
         <DetailWrapper>
-            <Detail types={pokemon.types}>
+            <Detail types={pokemon.types} key={Math.random()}>
                 <Pokeball className="pokeball" />
                 <LeftSlideIcon onClick={() => slide("left")} />
                 <RightSlideIcon onClick={() => slide("right")} />
@@ -92,6 +96,13 @@ const PokemonDetail = () => {
                         </InfoCharacter>
                     </AdditionalInfo>
 
+                    <Title types={pokemon.types}>Abilities</Title>
+                    <Abilities>
+                        {
+                            pokemon.abilities?.map((e, i) => <Ability key={i}>{e}</Ability>)
+                        }
+                    </Abilities>
+
                     <Title types={pokemon.types}>Base Stats</Title>
 
                     <Stats>
@@ -112,6 +123,9 @@ export default PokemonDetail
 const DetailWrapper = styled(ListWrapper)``;
 
 const Detail = styled.div <{ types: string[] }>`
+    opacity: 1;
+    animation-name: fade;
+    animation-duration: 0.5s;
 
     ${({ types, theme }) => {
         if (types && types.length > 1) {
@@ -163,6 +177,12 @@ const Detail = styled.div <{ types: string[] }>`
 
     @media(max-width: 450px) {
         margin: 0 20px;
+    }
+
+    @keyframes fade {
+        from {
+            opacity: 0;
+        }
     }
 `;
 
@@ -294,3 +314,13 @@ const RightSlideIcon = styled(LeftSlideIcon)`
         right: -25px;
     }
 `
+
+const Abilities = styled.div`
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+`;
+
+const Ability = styled.div`
+    font-size: 14px;
+`;

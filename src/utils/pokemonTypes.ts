@@ -13,5 +13,6 @@ export const pokemonTypes = [
     "rock",
     "fairy",
     "fighting",
-    "ground"
+    "ground",
+    "ice"
 ]
