@@ -5,7 +5,7 @@ import api from "../utils/axios";
 import Select, { MultiValue, SingleValue } from "react-select"
 import { pokemonTypes } from "../utils/pokemonTypes";
 import { ReactComponent as Pokeball } from "../assets/pokeball.svg"
-import { Fade, Slide } from "react-awesome-reveal";
+import { ReactComponent as PokeballColored } from "../assets/PokeballColored.svg"
 
 interface PokemonData {
     name: string;
@@ -92,25 +92,32 @@ const PokemonList: Function = () => {
 
     return (
         <ListWrapper>
-            <Filters>
-                <Select
-                    options={pokemonListGenerator()?.map(e => ({ value: e.id, label: e.name }))}
-                    onChange={(val) => filterByName(val)}
-                    placeholder="Find by name"
-                    className="select"
-                    isClearable
-                    value={filteredId}
-                />
+            <Header>
+                <Logo>
+                    <LogoPokeball />
+                    Pokedox
+                </Logo>
 
-                <Select
-                    options={pokemonTypes.map(e => ({ value: e, label: e }))}
-                    onChange={(val) => filterByType(val)}
-                    placeholder="Filter by type"
-                    isMulti
-                    className="select"
-                    value={filteredTypes}
-                />
-            </Filters>
+                <Filters>
+                    <Select
+                        options={pokemonListGenerator()?.map(e => ({ value: e.id, label: e.name }))}
+                        onChange={(val) => filterByName(val)}
+                        placeholder="Find by name"
+                        className="select"
+                        isClearable
+                        value={filteredId}
+                    />
+
+                    <Select
+                        options={pokemonTypes.map(e => ({ value: e, label: e }))}
+                        onChange={(val) => filterByType(val)}
+                        placeholder="Filter by type"
+                        isMulti
+                        className="select"
+                        value={filteredTypes}
+                    />
+                </Filters>
+            </Header>
 
             {loading && <StyledPokeball />}
 
@@ -139,11 +146,11 @@ export const ListWrapper = styled.div`
     box-sizing: border-box;
     background: radial-gradient(121.73% 181.92% at 6.77% 4.33%, #4F5275 0%, #33304B 100%);
 
-    @media(max-width: 1000px) {
-        padding: 20px 60px;
+    @media(max-width: 1150px) {
+        padding: 20px 50px;
     }
 
-    @media(max-width: 850px) {
+    @media(max-width: 990px) {
         padding: 20px 30px;
     }
 
@@ -157,16 +164,37 @@ const PokemonsWrapper = styled.div`
     grid-template-columns: repeat(auto-fill, minmax(200px, 0.5fr));
     place-items: center;
     gap: 40px 30px;
+
+    @media(max-width: 600px) {
+        gap: 20px 15px;
+    }
+    
+    @media(max-width: 460px) {
+        grid-template-columns: 1fr;
+        gap: 20px 15px;
+    }
 `;
 
 const Filters = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    margin: 20px 0;
+    display: flex;
+    gap: 10px;
 
     .select {
+        min-width: 300px;
         font-size: 14px;
+
+        @media(max-width: 700px) {
+            width: 100%;
+            min-width: auto;
+        }
+    }
+
+    @media(max-width: 700px) {
+        width: 100%;
+    } 
+
+    @media(max-width: 600px) {
+        flex-direction: column;
     }
 `;
 
@@ -187,6 +215,28 @@ const StyledPokeball = styled(Pokeball)`
     }
 `
 
-const StyledFade = styled(Fade)`
-    width: 100%;
+const Header = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+
+    @media(max-width: 950px) {
+        flex-direction: column;
+        gap: 20px;
+    }
+`;
+
+const LogoPokeball = styled(PokeballColored)`
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+`;
+
+const Logo = styled.div`
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
 `

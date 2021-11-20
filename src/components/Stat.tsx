@@ -35,7 +35,7 @@ const Wrapper = styled.div<{ stat: number, types: string[] }>`
         line-height: 16px;
         color: ${({ types, theme }) => theme.colors[types[0]]};
         font-weight: bold;
-        min-width: 130px;
+        min-width: 105px;
         text-align: right;
     }
 

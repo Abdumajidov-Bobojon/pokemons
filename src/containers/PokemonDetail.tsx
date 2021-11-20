@@ -62,6 +62,7 @@ const PokemonDetail = () => {
         <DetailWrapper>
             <Detail types={pokemon.types} key={Math.random()}>
                 <Pokeball className="pokeball" />
+
                 <LeftSlideIcon onClick={() => slide("left")} />
                 <RightSlideIcon onClick={() => slide("right")} />
 
@@ -120,7 +121,12 @@ const PokemonDetail = () => {
 
 export default PokemonDetail
 
-const DetailWrapper = styled(ListWrapper)``;
+const DetailWrapper = styled(ListWrapper)`
+    @media(max-width: 500px) {
+        margin: 0;
+        padding: 0;
+    }
+`;
 
 const Detail = styled.div <{ types: string[] }>`
     opacity: 1;
@@ -172,11 +178,10 @@ const Detail = styled.div <{ types: string[] }>`
     }
 
     @media(max-width: 500px) {
-        margin: 0 30px;
-    }
-
-    @media(max-width: 450px) {
-        margin: 0 20px;
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
     }
 
     @keyframes fade {
@@ -217,6 +222,9 @@ const Info = styled.div`
     border-radius: 5px;
     padding-bottom: 24px;
 
+    @media(max-width: 500px) {
+        height: 100%;
+    }
 `;
 
 const Header = styled.div`
@@ -296,10 +304,11 @@ const LeftSlideIcon = styled(SlideIcon)`
     height: 40px;
     cursor: pointer;
 
-    @media(max-width: 450px) {
+    @media(max-width: 500px) {
         width: 20px;
         height: 20px;
-        left: -25px;
+        left: 10px;
+        stroke: grey;
     }
 `
 
@@ -308,10 +317,11 @@ const RightSlideIcon = styled(LeftSlideIcon)`
     left: auto;
     right: -50px;
 
-    @media(max-width: 450px) {
+    @media(max-width: 500px) {
         width: 20px;
         height: 20px;
-        right: -25px;
+        right: 10px;
+        stroke: grey;
     }
 `
 
