@@ -77,7 +77,7 @@ const PokemonDetail = () => {
                 <Info>
                     <Types>
                         {
-                            pokemon.types?.map(e => <Type type={e}>{e}</Type>)
+                            pokemon.types?.map((e, i) => <Type key={i} type={e}>{e}</Type>)
                         }
                     </Types>
 

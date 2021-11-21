@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import PokemonCard from "../components/PokemonCard";
-import api from "../utils/axios";
 import Select, { MultiValue, SingleValue } from "react-select"
 import { pokemonTypes } from "../utils/pokemonTypes";
 import { ReactComponent as Pokeball } from "../assets/pokeball.svg"
 import { ReactComponent as PokeballColored } from "../assets/PokeballColored.svg"
-
-interface PokemonData {
-    name: string;
-    id: string,
-    image: string,
-    types: string[]
-}
+import { useAppDispatch } from "../store/hooks";
+import { fetchPokemons } from "../store/actions";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store"
+import { getFromStorage } from "../utils/functions";
 
 interface FilterTpyes {
     label: string,
@@ -20,38 +17,15 @@ interface FilterTpyes {
 }
 
 const PokemonList: Function = () => {
-    const [pokemons, setPokemons] = useState<PokemonData[] | null>(null)
-    const [loading, setLoading] = useState<boolean>(false)
-    const [filteredTypes, setFilteredTypes] = useState<FilterTpyes[] | null>(
-        localStorage.getItem("filtered-types")
-            ? JSON.parse(localStorage.getItem("filtered-types") || "")
-            : null
-    )
+    const [filteredTypes, setFilteredTypes] = useState<FilterTpyes[] | null>(getFromStorage("filtered-types"))
+    const [filteredId, setFilteredId] = useState<FilterTpyes | null>(getFromStorage("filtered-id"))
 
-    const [filteredId, setFilteredId] = useState<FilterTpyes | null>(
-        localStorage.getItem("filtered-id")
-            ? JSON.parse(localStorage.getItem("filtered-id") || "")
-            : null
-    )
+    const { pokemons, loading } = useSelector((state: RootState) => state.app)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
-        setLoading(true);
-        let promises = []
-        for (let i = 1; i <= 100; i++) {
-            let url = `https://pokeapi.co/api/v2/pokemon/${i}`
-            promises.push(api.get(url).then(res => res.data))
-        }
-
-        Promise.all(promises).then(res => {
-            setPokemons(res.map(e => ({
-                name: e.name,
-                id: e.id,
-                image: e.sprites['front_shiny'],
-                types: e.types.map((type: any) => type.type.name)
-            })));
-            setLoading(false)
-        })
-    }, [])
+        pokemons.length === 0 && dispatch(fetchPokemons())
+    }, [dispatch, pokemons.length])
 
     const filterByName = (val: SingleValue<{ value: string; label: string; }>) => {
         if (val === null) {
@@ -74,10 +48,10 @@ const PokemonList: Function = () => {
     }
 
     const pokemonListGenerator = () => {
-        let stateCopy = pokemons && [...pokemons];
+        let stateCopy = [...pokemons ?? []];
 
         if (filteredTypes) {
-            stateCopy = pokemons && [...pokemons?.filter(e => {
+            stateCopy = [...pokemons.filter(e => {
                 const filtered = filteredTypes?.map(filterElement => e.types.includes(filterElement.value))
                 return filtered?.includes(true) ? true : false
             })]
