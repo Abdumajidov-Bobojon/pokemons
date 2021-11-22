@@ -1,17 +1,19 @@
 import styled, { css } from "styled-components"
 import { Link } from "react-router-dom"
+import { MouseEventHandler } from "react";
 
 interface ComponentProps {
     image: string,
     name: string,
     types: string[],
-    id: string
+    id: string,
+    onClick: MouseEventHandler<HTMLAnchorElement>
 }
 
-export default function PokemonCard({ name, image, id, types }: ComponentProps) {
+export default function PokemonCard({ name, image, id, types, onClick }: ComponentProps) {
     return (
         <Border types={types} index={id}>
-            <Link to={`/${id}`}>
+            <Link to={`/${id}`} onClick={onClick}>
                 <Wrapper>
                     <ImageWrapper>
                         <img src={image} alt={name + "-image"} />

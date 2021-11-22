@@ -25,10 +25,12 @@ interface PokemonDetailInterface {
 
 const PokemonDetail = () => {
     const [pokemon, setPokemon] = useState<PokemonDetailInterface>(Object)
+    const [loading, setLoading] = useState<boolean>(false)
     const { id } = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
+        setLoading(true);
         api.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
             .then(({ data }) => {
                 setPokemon({
@@ -44,77 +46,79 @@ const PokemonDetail = () => {
                         stat: e.base_stat
                     }))
                 })
+                setLoading(false)
             })
     }, [id])
 
     const slide = (dir: string) => {
         if (dir === "left" && !(+id! - 1 <= 0)) {
             navigate(`/${+id! - 1}`)
-            console.log(+id!)
         } else if (dir === "right" && !(+id! + 1 >= 101)) {
             navigate(`/${+id! + 1}`)
         }
     }
 
-    console.log(pokemon)
-
     return (
         <DetailWrapper>
-            <Detail types={pokemon.types} key={Math.random()}>
-                <Pokeball className="pokeball" />
+            {
+                !loading &&
 
-                <LeftSlideIcon onClick={() => slide("left")} />
-                <RightSlideIcon onClick={() => slide("right")} />
+                <Detail types={pokemon.types} key={Math.random()}>
+                    <Pokeball className="pokeball" />
 
-                <Header>
-                    <ArrowLeft onClick={() => navigate("/")} />
-                    <Name>{pokemon.name}</Name>
-                    <Id>#{pokemon.id}</Id>
-                </Header>
+                    <LeftSlideIcon onClick={() => slide("left")} />
+                    <RightSlideIcon onClick={() => slide("right")} />
 
-                <PokemonImage src={pokemon.image} alt={pokemon.name + "-image"} />
+                    <Header>
+                        <ArrowLeft onClick={() => navigate("/")} />
+                        <Name>{pokemon.name}</Name>
+                        <Id>#{pokemon.id}</Id>
+                    </Header>
 
-                <Info>
-                    <Types>
-                        {
-                            pokemon.types?.map((e, i) => <Type key={i} type={e}>{e}</Type>)
-                        }
-                    </Types>
+                    <PokemonImage src={pokemon.image} alt={pokemon.name + "-image"} />
 
-                    <Title types={pokemon.types}>About</Title>
-                    <AdditionalInfo>
+                    <Info>
+                        <Types>
+                            {
+                                pokemon.types?.map((e, i) => <Type key={i} type={e}>{e}</Type>)
+                            }
+                        </Types>
 
-                        <InfoCharacter>
-                            <WeightIcon />
-                            <p>Weight:</p>
-                            {pokemon.weight} kg
-                        </InfoCharacter>
+                        <Title types={pokemon.types}>About</Title>
+                        <AdditionalInfo>
 
-                        <InfoCharacter>
-                            <HeightIcon />
-                            <p>Height:</p>
-                            {pokemon.height} m
-                        </InfoCharacter>
-                    </AdditionalInfo>
+                            <InfoCharacter>
+                                <WeightIcon />
+                                <p>Weight:</p>
+                                {pokemon.weight} kg
+                            </InfoCharacter>
 
-                    <Title types={pokemon.types}>Abilities</Title>
-                    <Abilities>
-                        {
-                            pokemon.abilities?.map((e, i) => <Ability key={i}>{e}</Ability>)
-                        }
-                    </Abilities>
+                            <InfoCharacter>
+                                <HeightIcon />
+                                <p>Height:</p>
+                                {pokemon.height} m
+                            </InfoCharacter>
+                        </AdditionalInfo>
 
-                    <Title types={pokemon.types}>Base Stats</Title>
+                        <Title types={pokemon.types}>Abilities</Title>
+                        <Abilities>
+                            {
+                                pokemon.abilities?.map((e, i) => <Ability key={i}>{e}</Ability>)
+                            }
+                        </Abilities>
 
-                    <Stats>
-                        {
-                            pokemon.stats?.map((e: any) =>
-                                <Stat key={e.name} name={e.name} stat={e.stat} types={pokemon.types} />
-                            )
-                        }
-                    </Stats>
-                </Info>
-            </Detail>
+                        <Title types={pokemon.types}>Base Stats</Title>
+
+                        <Stats>
+                            {
+                                pokemon.stats?.map((e: any) =>
+                                    <Stat key={e.name} name={e.name} stat={e.stat} types={pokemon.types} />
+                                )
+                            }
+                        </Stats>
+                    </Info>
+                </Detail>
+            }
         </DetailWrapper>
     )
 }

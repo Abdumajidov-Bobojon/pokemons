@@ -19,12 +19,17 @@ interface FilterTpyes {
 const PokemonList: Function = () => {
     const [filteredTypes, setFilteredTypes] = useState<FilterTpyes[] | null>(getFromStorage("filtered-types"))
     const [filteredId, setFilteredId] = useState<FilterTpyes | null>(getFromStorage("filtered-id"))
-
     const { pokemons, loading } = useSelector((state: RootState) => state.app)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
         pokemons.length === 0 && dispatch(fetchPokemons())
+        let scrollPos = sessionStorage.getItem("scrollPosition");
+
+        if (scrollPos) {
+            window.scrollTo(0, parseInt(scrollPos))
+        }
+
     }, [dispatch, pokemons.length])
 
     const filterByName = (val: SingleValue<{ value: string; label: string; }>) => {
@@ -99,6 +104,11 @@ const PokemonList: Function = () => {
                 {
                     pokemonListGenerator()?.map((element, index) =>
                         <PokemonCard
+                            onClick={() =>
+                                sessionStorage.setItem(
+                                    "scrollPosition", window.scrollY.toString()
+                                )
+                            }
                             key={index}
                             image={element.image}
                             name={element.name}
