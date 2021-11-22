@@ -1,5 +1,5 @@
 export const getFromStorage = (name: string) => {
-    return localStorage.getItem(name)
-        ? JSON.parse(localStorage.getItem(name) || "")
+    return sessionStorage.getItem(name)
+        ? JSON.parse(sessionStorage.getItem(name) || "")
         : null
 }

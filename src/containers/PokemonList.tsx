@@ -35,19 +35,19 @@ const PokemonList: Function = () => {
     const filterByName = (val: SingleValue<{ value: string; label: string; }>) => {
         if (val === null) {
             setFilteredId(null)
-            localStorage.removeItem("filtered-id")
+            sessionStorage.removeItem("filtered-id")
         } else {
             setFilteredId(val)
-            localStorage.setItem("filtered-id", JSON.stringify(val))
+            sessionStorage.setItem("filtered-id", JSON.stringify(val))
         }
     }
 
     const filterByType = (val: MultiValue<{ value: string; label: string; }>) => {
         if (val.length === 0) {
             setFilteredTypes(null)
-            localStorage.removeItem("filtered-types")
+            sessionStorage.removeItem("filtered-types")
         } else {
-            localStorage.setItem("filtered-types", JSON.stringify(val))
+            sessionStorage.setItem("filtered-types", JSON.stringify(val))
             setFilteredTypes([...val])
         }
     }
