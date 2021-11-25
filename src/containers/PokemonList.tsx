@@ -56,14 +56,21 @@ const PokemonList: Function = () => {
         let stateCopy = [...pokemons ?? []];
 
         if (filteredTypes) {
-            stateCopy = [...pokemons.filter(e => {
-                const filtered = filteredTypes?.map(filterElement => e.types.includes(filterElement.value))
-                return filtered?.includes(true) ? true : false
-            })]
+            stateCopy = stateCopy.filter(stateCopyEl =>
+                filteredTypes?.map(filterEl =>
+                    stateCopyEl.types.includes(filterEl.value)).includes(true)
+            )
         }
 
+        // Strict filter mode!
+        // if (filteredTypes) {
+        //     stateCopy = stateCopy.filter(stateCopyEl => filteredTypes?.every(filterEl =>
+        //         stateCopyEl.types.includes(filterEl.value))
+        //     )
+        // }
+
         if (filteredId) {
-            stateCopy = stateCopy && stateCopy?.filter(e => e.id === filteredId.value)
+            stateCopy = stateCopy?.filter(e => e.id === filteredId.value)
         }
 
         return stateCopy;
