@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import PokemonCard from "../components/PokemonCard";
-import Select, { MultiValue, SingleValue } from "react-select"
+import Select from "react-select"
 import { pokemonTypes } from "../utils/pokemonTypes";
 import { ReactComponent as Pokeball } from "../assets/pokeball.svg"
 import { ReactComponent as PokeballColored } from "../assets/PokeballColored.svg"
@@ -9,7 +9,7 @@ import { useAppDispatch } from "../store/hooks";
 import { fetchPokemons } from "../store/actions";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store"
-import { getFromStorage } from "../utils/functions";
+import { getFromStorage, handleSessionStorage } from "../utils/functions";
 
 interface FilterTpyes {
     label: string,
@@ -17,8 +17,8 @@ interface FilterTpyes {
 }
 
 const PokemonList: Function = () => {
-    const [filteredTypes, setFilteredTypes] = useState<FilterTpyes[] | null>(getFromStorage("filtered-types"))
-    const [filteredId, setFilteredId] = useState<FilterTpyes | null>(getFromStorage("filtered-id"))
+    const [filteredTypes, setFilteredTypes] = useState<FilterTpyes[] | []>(getFromStorage("filtered-types", []))
+    const [filteredId, setFilteredId] = useState<FilterTpyes | null>(getFromStorage("filtered-id", null))
     const { pokemons, loading } = useSelector((state: RootState) => state.app)
     const dispatch = useAppDispatch()
 
@@ -32,30 +32,10 @@ const PokemonList: Function = () => {
 
     }, [dispatch, pokemons.length])
 
-    const filterByName = (val: SingleValue<{ value: string; label: string; }>) => {
-        if (val === null) {
-            setFilteredId(null)
-            sessionStorage.removeItem("filtered-id")
-        } else {
-            setFilteredId(val)
-            sessionStorage.setItem("filtered-id", JSON.stringify(val))
-        }
-    }
-
-    const filterByType = (val: MultiValue<{ value: string; label: string; }>) => {
-        if (val.length === 0) {
-            setFilteredTypes(null)
-            sessionStorage.removeItem("filtered-types")
-        } else {
-            sessionStorage.setItem("filtered-types", JSON.stringify(val))
-            setFilteredTypes([...val])
-        }
-    }
-
     const pokemonListGenerator = () => {
         let stateCopy = [...pokemons ?? []];
 
-        if (filteredTypes) {
+        if (filteredTypes?.length > 0) {
             stateCopy = stateCopy.filter(stateCopyEl =>
                 filteredTypes?.map(filterEl =>
                     stateCopyEl.types.includes(filterEl.value)).includes(true)
@@ -87,7 +67,7 @@ const PokemonList: Function = () => {
                 <Filters>
                     <Select
                         options={pokemonListGenerator()?.map(e => ({ value: e.id, label: e.name }))}
-                        onChange={(val) => filterByName(val)}
+                        onChange={(val) => { setFilteredId(val); handleSessionStorage(val, "filtered-id") }}
                         placeholder="Find by name"
                         className="select"
                         isClearable
@@ -96,7 +76,7 @@ const PokemonList: Function = () => {
 
                     <Select
                         options={pokemonTypes.map(e => ({ value: e, label: e }))}
-                        onChange={(val) => filterByType(val)}
+                        onChange={(val) => { setFilteredTypes([...val]); handleSessionStorage(val, "filtered-types") }}
                         placeholder="Filter by type"
                         isMulti
                         className="select"
